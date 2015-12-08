@@ -63,5 +63,15 @@ namespace CastingAdventure {
 
             Point p1 = (Point) a[0]; // Unboxing Point from ArrayList boxed item
         }
+
+        [Fact]
+        public void Invalid_cast_exception() {
+            //If the variable containing the reference to the boxed value type instance is null, a NullReferenceException is thrown.
+            //If the reference doesn’t refer to an object that is a boxed instance of the desired value type, an InvalidCastException is thrown.
+
+            Int32 x = 5;
+            Object o = x;         // Box x; o refers to the boxed object
+            Int16 y = (Int16) o; // Throws an InvalidCastException
+        }
     }
 }
