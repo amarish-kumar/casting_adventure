@@ -45,7 +45,7 @@ namespace CastingAdventure {
             System.Int32 i1 = new System.Int32();
 
             //float f1 = (float) o1; // RTE - Unboxing Object to Float
-            float f2 = (float)i1;
+            float f1 = (float)i1;
         }
 
         struct Point {
@@ -73,14 +73,14 @@ namespace CastingAdventure {
             Int32 x = 5;
             Object o = x; // Box x; o refers to the boxed Int32, NOT a boxed Int16
                           //_output.WriteLine(o.GetType().ToString()); // Int32 NOT Int16
-            Exception e = Assert.Throws<InvalidCastException>(() => { Int16 y = (Int16)o; } );
+            Exception e = Assert.Throws<InvalidCastException>(() => { Int16 y = (Int16)o; });
         }
         [Fact]
         public void Valid_unboxing() {
-           
+
             // Following the rule that boxed instance can 
             // only be unboxed to desired value type
-            
+
             Int32 x = 5;
             Object o = x;
             Int16 y = (Int16)(Int32)o; // Valid because we are unboxing to Int32,
@@ -103,9 +103,29 @@ namespace CastingAdventure {
 
             // Change Point's x field to 2
             p = (Point)o; // Unboxes o AND copies fields from boxed
-            // instance to stack variable
+                            // instance to stack variable
+
             p.x = 2;
             o = p;
+        }
+        [Fact]
+        public void Unboxed_boxed_different_values() {
+            Int32 v = 5;            // Create an unboxed value type variable.
+            Object o = v;            // o refers to a boxed Int32 containing 5.
+            v = 123;                 // Changes the unboxed value to 123
+
+            _output.WriteLine(v + ", " + (Int32)o); // Displays "123, 5"
+        }
+
+        [Fact]
+        public void Boxing_in_ArrayList() {
+            ArrayList a = new ArrayList();
+            int b;            
+            for (Int32 i = 0; i < 10; i++) {
+                b = 10;  
+                a.Add(b);        
+            }
+            Exception e = Assert.Throws<InvalidCastException>(() => { float f = (float)a[0]; });
         }
     }
 }
