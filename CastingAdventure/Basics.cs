@@ -9,10 +9,10 @@ using Xunit.Abstractions;
 
 namespace CastingAdventure {
     internal class B { // Base class
-        
+
     }
     internal class D : B { // Derived class
-        
+
     }
     public class BasicsTests {
         private readonly ITestOutputHelper _output;
@@ -32,11 +32,11 @@ namespace CastingAdventure {
             //D d2 = new Object(); // CTE - Object is NOT Derived from D
             B b4 = d1;
             //D d3 = b2; // CTE b2 is a D Casted to B, B is NOT Derived from D
-            D d4 = (D) d1; // Cast is NOT needed, d1 is already D
-            D d5 = (D) b2; // Casting B to D, OK
+            D d4 = (D)d1; // Cast is NOT needed, d1 is already D
+            D d5 = (D)b2; // Casting B to D, OK
             //D d6 = (D)b1; // RTE - B is NOT Derived from D, can't be Cast to D
             //B b5 = (B) o1; // RTE - Object is NOT Derived from B, can't be Cast to B
-            B b6 = (D) b2; 
+            B b6 = (D)b2;
         }
 
         [Fact]
@@ -45,9 +45,9 @@ namespace CastingAdventure {
             System.Int32 i1 = new System.Int32();
 
             //float f1 = (float) o1; // RTE - Unboxing Object to Float
-            float f2 = (float) i1;
+            float f2 = (float)i1;
         }
-        
+
         struct Point {
             public Int32 x, y;
         }
@@ -61,17 +61,51 @@ namespace CastingAdventure {
                                  // reference to the Arraylist.
             }
 
-            Point p1 = (Point) a[0]; // Unboxing Point from ArrayList boxed item
+            Point p1 = (Point)a[0]; // Unboxing Point from ArrayList boxed item
         }
 
         [Fact]
         public void Invalid_cast_exception() {
+
             //If the variable containing the reference to the boxed value type instance is null, a NullReferenceException is thrown.
             //If the reference doesn’t refer to an object that is a boxed instance of the desired value type, an InvalidCastException is thrown.
 
             Int32 x = 5;
-            Object o = x;         // Box x; o refers to the boxed object
-            Int16 y = (Int16) o; // Throws an InvalidCastException
+            Object o = x; // Box x; o refers to the boxed Int32, NOT a boxed Int16
+                          //_output.WriteLine(o.GetType().ToString()); // Int32 NOT Int16
+            Exception e = Assert.Throws<InvalidCastException>(() => { Int16 y = (Int16)o; } );
+        }
+        [Fact]
+        public void Valid_unboxing() {
+           
+            // Following the rule that boxed instance can 
+            // only be unboxed to desired value type
+            
+            Int32 x = 5;
+            Object o = x;
+            Int16 y = (Int16)(Int32)o; // Valid because we are unboxing to Int32,
+                                       // which is the same as the originally boxed type
+        }
+        [Fact]
+        public void Unbox_and_copy() {
+            Point p;
+            p.x = p.y = 1;
+            Object o = p;   // Boxes p; o refers to the boxed instance
+
+            p = (Point)o;  // Unboxes o AND copies fields from boxed
+                           // instance to stack variable
+        }
+        [Fact]
+        public void Boxing_unboxing_copying_boxing() {
+            Point p;
+            p.x = p.y = 1;
+            Object o = p; // Boxes p; o refers to boxed instance
+
+            // Change Point's x field to 2
+            p = (Point)o; // Unboxes o AND copies fields from boxed
+            // instance to stack variable
+            p.x = 2;
+            o = p;
         }
     }
 }
