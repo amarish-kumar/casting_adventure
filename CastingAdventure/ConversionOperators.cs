@@ -14,17 +14,17 @@ namespace CastingAdventure {
         }
         [Fact]
         public void Conversion_operator_float() {
-            Object o1 = new System.Int32();
-            _output.WriteLine(o1.GetType().ToString()); // Evaluates to System.Int32 even thought it's Object
+            Object o = 5;
+            _output.WriteLine(o.GetType().ToString()); // Evaluates to System.Int32 even thought it's Object
                                                         // This is good because how else would you be able to
                                                         // see what the type of a classes field is?
                                                         // That field is boxed         
             // "However, calling a nonvirtual inherited method (such as GetType or MemberwiseClone) always requires the value type to be boxed because these methods are defined by System.Object, so the methods expect the this argument to be a pointer that refers to an object on the heap."
             // We wouldn't be able to call .GetType() unless we boxed it
 
-            float f1 = Convert.ToSingle(o1); // It's a boxed Int32
+            float f1 = Convert.ToSingle(o); // It's a boxed Int32
                                              // We are actually passing a reference type (Object) to ToSingle()
-            float f2 = ToSingleTest(o1); // Hand coded version of the static Convert.ToSingle(object value) method
+            float f2 = ToSingleTest(o); // Hand coded version of the static Convert.ToSingle(object value) method
 
             Assert.Equal("System.Single", f1.GetType().ToString());
             Assert.Equal("System.Single", f2.GetType().ToString());

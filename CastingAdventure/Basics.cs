@@ -126,6 +126,7 @@ namespace CastingAdventure {
                 a.Add(b);        
             }
             Exception e = Assert.Throws<InvalidCastException>(() => { float f = (float)a[0]; });
+            Convert.ToSingle(a[0]);
         }
     }
 }
