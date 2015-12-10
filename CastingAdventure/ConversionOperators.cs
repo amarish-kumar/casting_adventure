@@ -22,18 +22,33 @@ namespace CastingAdventure {
             // "However, calling a nonvirtual inherited method (such as GetType or MemberwiseClone) always requires the value type to be boxed because these methods are defined by System.Object, so the methods expect the this argument to be a pointer that refers to an object on the heap."
             // We wouldn't be able to call .GetType() unless we boxed it
 
-            System.Int32 i1 = new System.Int32();
-            _output.WriteLine(i1.GetType().ToString()); // Did this get boxed per the requirement?
-            float l2 = IntToSingleTest(i1); // Gets unboxed as it's cast to int parameter?
-
-            _output.WriteLine(IsBoxed(i1).ToString());
-
             float f1 = Convert.ToSingle(o1); // It's a boxed Int32
                                              // We are actually passing a reference type (Object) to ToSingle()
             float f2 = ToSingleTest(o1); // Hand coded version of the static Convert.ToSingle(object value) method
 
             Assert.Equal("System.Single", f1.GetType().ToString());
             Assert.Equal("System.Single", f2.GetType().ToString());
+        }
+
+        [Fact]
+        public void GetType_implications() {
+            Object o1 = new System.Int32();
+            System.Int32 i1 = new System.Int32();
+
+            _output.WriteLine(i1.GetType().ToString()); // Did this get boxed per the requirement?
+            _output.WriteLine(IsBoxed(i1).ToString());
+
+            float l2 = ToSingleTest(i1); // Gets unboxed as it's cast to int parameter?
+            float l3 = IntToSingleTest(i1); // It can be param type of Object or Int32 
+        }
+
+        [Fact]
+        public void Another_bad_cast_example() {
+            Object i = 5;   
+            Int64 l = (Int64) i;
+
+            int i2 = 5;
+            float f = (int)i2;
         }
 
         // http://referencesource.microsoft.com/#mscorlib/system/convert.cs,1c5255ca394e755d
